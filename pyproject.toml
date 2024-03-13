@@ -22,3 +22,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 calmerge = "calmerge.__main__:main"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "N", "B", "A", "C4", "T20"]
+ignore = ["E501"]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"__main__.py" = ["T201"]

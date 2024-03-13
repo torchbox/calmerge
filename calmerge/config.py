@@ -1,8 +1,9 @@
-from pydantic import BaseModel, HttpUrl, Field, field_validator
 from datetime import timedelta
+from pathlib import Path
+
 import tempora
 import tomllib
-from pathlib import Path
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 
 class CalendarConfig(BaseModel):

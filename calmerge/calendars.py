@@ -1,8 +1,10 @@
-import icalendar
-from .config import CalendarConfig
-from aiohttp import ClientSession
 import asyncio
 from datetime import timedelta
+
+import icalendar
+from aiohttp import ClientSession
+
+from .config import CalendarConfig
 
 
 async def fetch_calendar(session: ClientSession, url: str):
@@ -19,7 +21,6 @@ async def fetch_merged_calendar(calendar_config: CalendarConfig):
 
         for coro in asyncio.as_completed(calendars):
             calendar = await coro
-            icalendar.Event
             for component in calendar.walk("VEVENT"):
                 merged_calendar.add_component(component)
 

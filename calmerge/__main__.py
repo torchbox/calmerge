@@ -1,10 +1,12 @@
 import argparse
-from . import get_aiohttp_app
-from aiohttp.web import run_app
 import os
-from .config import Config
 from pathlib import Path
+
+from aiohttp.web import run_app
 from pydantic import ValidationError
+
+from . import get_aiohttp_app
+from .config import Config
 
 
 def file_path(path: str):
