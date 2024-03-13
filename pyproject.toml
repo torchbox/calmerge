@@ -9,6 +9,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 aiohttp = "^3.9.3"
+pydantic = "^2.6.4"
+tempora = "^5.5.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.2"
