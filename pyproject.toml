@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "calmerge"
+version = "0.1.0"
+description = ""
+authors = ["Jake Howard"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiohttp = "^3.9.3"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+calmerge = "calmerge.__main__:main"
