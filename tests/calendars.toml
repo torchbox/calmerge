@@ -1,0 +1,22 @@
+[[calendar]]
+name = "python"
+urls = [
+    "https://endoflife.date/calendar/python.ics",
+]
+
+[[calendar]]
+name = "python-offset"
+urls = [
+    "https://endoflife.date/calendar/python.ics",
+]
+offset = "365 days"
+
+[[calendar]]
+name = "python-authed"
+urls = [
+    "https://endoflife.date/calendar/python.ics",
+]
+
+[calendar.auth]
+username = "user"
+password = "password"

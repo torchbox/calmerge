@@ -13,12 +13,12 @@ async def calendar(request):
     calendar_config = config.get_calendar_by_name(request.match_info["name"])
 
     if calendar_config is None:
-        return web.HTTPNotFound()
+        raise web.HTTPNotFound()
 
     if calendar_config.auth and not calendar_config.auth.validate_header(
         request.headers.get("Authorization", "")
     ):
-        return web.HTTPNotFound()
+        raise web.HTTPNotFound()
 
     calendar = await fetch_merged_calendar(calendar_config)
 
