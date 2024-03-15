@@ -27,10 +27,12 @@ async def fetch_merged_calendar(calendar_config: CalendarConfig):
     return merged_calendar
 
 
-def offset_calendar(calendar: icalendar.Calendar, offset: timedelta):
+def offset_calendar(calendar: icalendar.Calendar, offset_days: int):
     """
     Mutate a calendar and move events by a given offset
     """
+    offset = timedelta(days=offset_days)
+
     for component in calendar.walk():
         if "DTSTART" in component:
             component["DTSTART"].dt += offset

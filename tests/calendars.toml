@@ -9,7 +9,7 @@ name = "python-offset"
 urls = [
     "https://endoflife.date/calendar/python.ics",
 ]
-offset = "365 days"
+offset_days = 365
 
 [[calendar]]
 name = "python-authed"

@@ -1,11 +1,9 @@
-from datetime import timedelta
 from pathlib import Path
 from secrets import compare_digest
 
-import tempora
 import tomllib
 from aiohttp import BasicAuth
-from pydantic import BaseModel, Field, HttpUrl, field_validator
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class AuthConfig(BaseModel):
@@ -29,15 +27,8 @@ class AuthConfig(BaseModel):
 class CalendarConfig(BaseModel):
     name: str
     urls: list[HttpUrl]
-    offset: timedelta | None = None
+    offset_days: int = Field(default=0)
     auth: AuthConfig | None = None
-
-    @field_validator("offset", mode="before")
-    @classmethod
-    def parse_offset(cls, v: str) -> timedelta:
-        if v[0] == "-":
-            return -tempora.parse_timedelta(v[1:])
-        return tempora.parse_timedelta(v)
 
 
 class Config(BaseModel):

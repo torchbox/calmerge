@@ -22,7 +22,7 @@ async def calendar(request):
 
     calendar = await fetch_merged_calendar(calendar_config)
 
-    if offset := calendar_config.offset:
-        offset_calendar(calendar, offset)
+    if offset_days := calendar_config.offset_days:
+        offset_calendar(calendar, offset_days)
 
     return web.Response(body=calendar.to_ical(sorted=True))
