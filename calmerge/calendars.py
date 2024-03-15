@@ -2,15 +2,24 @@ import asyncio
 from datetime import timedelta
 
 import icalendar
+from aiocache import Cache
 from aiohttp import ClientSession
 
 from .config import CalendarConfig
 
+fetch_cache = Cache(Cache.MEMORY, ttl=3600)
+
 
 async def fetch_calendar(session: ClientSession, url: str):
-    response = await session.get(url)
+    cache_key = "calendar_" + url
+    cached_calendar_data = await fetch_cache.get(cache_key)
 
-    return icalendar.Calendar.from_ical(await response.text())
+    if cached_calendar_data is None:
+        response = await session.get(url)
+        cached_calendar_data = await response.text()
+        await fetch_cache.set(cache_key, cached_calendar_data)
+
+    return icalendar.Calendar.from_ical(cached_calendar_data)
 
 
 async def fetch_merged_calendar(calendar_config: CalendarConfig):
