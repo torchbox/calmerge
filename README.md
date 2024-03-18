@@ -15,7 +15,7 @@ By default, `calmerge` listens on port `3000` or `$PORT`.
 You will need Python and `poetry` installed.
 
 ```
-poetry install
+poetry install --no-dev
 poetry run calmerge serve
 ```
 
