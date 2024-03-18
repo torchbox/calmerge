@@ -2,7 +2,7 @@ import pytest
 from pydantic import ValidationError
 from pydantic_core import Url
 
-from calmerge.config import AuthConfig, CalendarConfig
+from calmerge.config import AuthConfig, CalendarConfig, Config
 
 
 def test_non_unique_urls():
@@ -34,3 +34,7 @@ def test_expand_unknown_var():
 
     assert auth_config.username == "$FOO"
     assert auth_config.password == "${FOO}BAR"
+
+
+def test_empty_config():
+    Config()

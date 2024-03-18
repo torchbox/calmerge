@@ -54,7 +54,7 @@ class CalendarConfig(BaseModel):
 
 
 class Config(BaseModel):
-    calendars: list[CalendarConfig] = Field(alias="calendar")
+    calendars: list[CalendarConfig] = Field(alias="calendar", default_factory=list)
 
     @classmethod
     def from_file(cls, path: Path):
