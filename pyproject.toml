@@ -19,6 +19,7 @@ pytest = "^8.1.1"
 pytest-aiohttp = "^1.0.5"
 pytest-asyncio = "^0.23.5.post1"
 pytest-cov = "^4.1.0"
+mypy = "^1.9.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -36,3 +37,17 @@ ignore = ["E501"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+[tool.mypy]
+warn_unused_ignores = true
+warn_return_any = true
+show_error_codes = true
+strict_optional = true
+implicit_optional = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+check_untyped_defs = true
+ignore_missing_imports = true

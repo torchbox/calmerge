@@ -22,7 +22,7 @@ class AuthConfig(BaseModel):
     def as_basic_auth(self) -> BasicAuth:
         return BasicAuth(self.username, self.password)
 
-    def validate_header(self, auth_header) -> bool:
+    def validate_header(self, auth_header: str) -> bool:
         try:
             parsed_auth_header = BasicAuth.decode(auth_header)
         except ValueError:
@@ -57,11 +57,11 @@ class Config(BaseModel):
     calendars: list[CalendarConfig] = Field(alias="calendar", default_factory=list)
 
     @classmethod
-    def from_file(cls, path: Path):
+    def from_file(cls, path: Path) -> "Config":
         with path.open(mode="rb") as f:
             return Config.model_validate(tomllib.load(f))
 
-    def get_calendar_by_name(self, name: str):
+    def get_calendar_by_name(self, name: str) -> CalendarConfig | None:
         return next(
             (calendar for calendar in self.calendars if calendar.name == name), None
         )

@@ -36,6 +36,32 @@ jobs:
       - name: Format
         run: poetry run ruff format . --check
 
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-3.11-${{ hashFiles('poetry.lock') }}
+
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.8.2
+
+      - name: Install Dependencies
+        run: poetry install
+
+      - name: Check types
+        run: poetry run mypy .
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -67,6 +93,7 @@ jobs:
     needs:
       - lint
       - test
+      - typecheck
     steps:
       - uses: actions/checkout@v4
 

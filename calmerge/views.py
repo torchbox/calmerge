@@ -5,11 +5,11 @@ from .config import MAX_OFFSET
 from .utils import try_parse_int
 
 
-async def healthcheck(request):
+async def healthcheck(request: web.Request) -> web.Response:
     return web.Response(text="")
 
 
-async def calendar(request):
+async def calendar(request: web.Request) -> web.Response:
     config = request.app["config"]
 
     calendar_config = config.get_calendar_by_name(request.match_info["name"])
@@ -25,7 +25,7 @@ async def calendar(request):
     calendar = await fetch_merged_calendar(calendar_config)
 
     if calendar_config.allow_custom_offset and (
-        offset_days := try_parse_int(request.query.get("offset_days"))
+        offset_days := try_parse_int(request.query.get("offset_days", ""))
     ):
         if abs(offset_days) > MAX_OFFSET:
             raise web.HTTPBadRequest(

@@ -4,7 +4,7 @@ from . import views
 from .config import Config
 
 
-def get_aiohttp_app(config: Config):
+def get_aiohttp_app(config: Config) -> web.Application:
     app = web.Application()
     app["config"] = config
 

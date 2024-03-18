@@ -3,11 +3,12 @@ from datetime import timedelta
 import icalendar
 import pytest
 from aiohttp import BasicAuth
+from aiohttp.test_utils import TestClient
 
 from calmerge.config import MAX_OFFSET
 
 
-async def test_retrieves_calendars(client):
+async def test_retrieves_calendars(client: TestClient) -> None:
     response = await client.get("/python.ics")
     assert response.status == 200
 
@@ -15,12 +16,12 @@ async def test_retrieves_calendars(client):
     assert not calendar.is_broken
 
 
-async def test_404_without_auth(client):
+async def test_404_without_auth(client: TestClient) -> None:
     response = await client.get("/python-authed.ics")
     assert response.status == 404
 
 
-async def test_requires_auth(client):
+async def test_requires_auth(client: TestClient) -> None:
     response = await client.get(
         "/python-authed.ics", auth=BasicAuth("user", "password")
     )
@@ -30,7 +31,7 @@ async def test_requires_auth(client):
     assert not calendar.is_broken
 
 
-async def test_offset(client):
+async def test_offset(client: TestClient) -> None:
     response = await client.get("/python-offset.ics")
     assert response.status == 200
 
@@ -38,7 +39,7 @@ async def test_offset(client):
     assert not calendar.is_broken
 
 
-async def test_offset_calendar_matches(client):
+async def test_offset_calendar_matches(client: TestClient) -> None:
     offset_response = await client.get("/python-offset.ics")
     offset_calendar = icalendar.Calendar.from_ical(await offset_response.text())
 
@@ -75,7 +76,7 @@ async def test_offset_calendar_matches(client):
 
 
 @pytest.mark.parametrize("offset", [100, -100, MAX_OFFSET, -MAX_OFFSET])
-async def test_custom_offset(client, offset):
+async def test_custom_offset(client: TestClient, offset: int) -> None:
     offset_response = await client.get(
         "/python-custom-offset.ics",
         params={"offset_days": offset},
@@ -107,7 +108,7 @@ async def test_custom_offset(client, offset):
 
 
 @pytest.mark.parametrize("offset", [MAX_OFFSET + 1, -MAX_OFFSET - 1])
-async def test_out_of_bounds_custom_offset(client, offset):
+async def test_out_of_bounds_custom_offset(client: TestClient, offset: int) -> None:
     response = await client.get(
         "/python-custom-offset.ics",
         params={"offset_days": offset},

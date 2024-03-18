@@ -10,7 +10,7 @@ from .config import CalendarConfig
 fetch_cache = Cache(Cache.MEMORY, ttl=3600)
 
 
-async def fetch_calendar(session: ClientSession, url: str):
+async def fetch_calendar(session: ClientSession, url: str) -> icalendar.Calendar:
     cache_key = "calendar_" + url
     cached_calendar_data = await fetch_cache.get(cache_key)
 
@@ -22,7 +22,7 @@ async def fetch_calendar(session: ClientSession, url: str):
     return icalendar.Calendar.from_ical(cached_calendar_data)
 
 
-async def fetch_merged_calendar(calendar_config: CalendarConfig):
+async def fetch_merged_calendar(calendar_config: CalendarConfig) -> icalendar.Calendar:
     merged_calendar = icalendar.Calendar()
 
     async with ClientSession() as session:
@@ -36,7 +36,7 @@ async def fetch_merged_calendar(calendar_config: CalendarConfig):
     return merged_calendar
 
 
-def offset_calendar(calendar: icalendar.Calendar, offset_days: int):
+def offset_calendar(calendar: icalendar.Calendar, offset_days: int) -> None:
     """
     Mutate a calendar and move events by a given offset
     """
