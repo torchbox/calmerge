@@ -5,6 +5,8 @@ import tomllib
 from aiohttp import BasicAuth
 from pydantic import BaseModel, Field, HttpUrl
 
+MAX_OFFSET = 3650
+
 
 class AuthConfig(BaseModel):
     username: str
@@ -27,7 +29,8 @@ class AuthConfig(BaseModel):
 class CalendarConfig(BaseModel):
     name: str
     urls: list[HttpUrl]
-    offset_days: int = Field(default=0)
+    offset_days: int = Field(default=0, le=MAX_OFFSET, ge=-MAX_OFFSET)
+    allow_custom_offset: bool = False
     auth: AuthConfig | None = None
 
 

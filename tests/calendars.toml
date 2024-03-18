@@ -12,6 +12,14 @@ urls = [
 offset_days = 365
 
 [[calendar]]
+name = "python-custom-offset"
+urls = [
+    "https://endoflife.date/calendar/python.ics",
+]
+offset_days = 10
+allow_custom_offset = true
+
+[[calendar]]
 name = "python-authed"
 urls = [
     "https://endoflife.date/calendar/python.ics",

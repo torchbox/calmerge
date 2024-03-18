@@ -1,7 +1,10 @@
 from datetime import timedelta
 
 import icalendar
+import pytest
 from aiohttp import BasicAuth
+
+from calmerge.config import MAX_OFFSET
 
 
 async def test_retrieves_calendars(client):
@@ -28,9 +31,7 @@ async def test_requires_auth(client):
 
 
 async def test_offset(client):
-    response = await client.get(
-        "/python-offset.ics", auth=BasicAuth("user", "password")
-    )
+    response = await client.get("/python-offset.ics")
     assert response.status == 200
 
     calendar = icalendar.Calendar.from_ical(await response.text())
@@ -38,14 +39,10 @@ async def test_offset(client):
 
 
 async def test_offset_calendar_matches(client):
-    offset_response = await client.get(
-        "/python-offset.ics", auth=BasicAuth("user", "password")
-    )
+    offset_response = await client.get("/python-offset.ics")
     offset_calendar = icalendar.Calendar.from_ical(await offset_response.text())
 
-    original_response = await client.get(
-        "/python.ics", auth=BasicAuth("user", "password")
-    )
+    original_response = await client.get("/python.ics")
     original_calendar = icalendar.Calendar.from_ical(await original_response.text())
 
     assert not offset_calendar.is_broken
@@ -75,3 +72,49 @@ async def test_offset_calendar_matches(client):
         )
 
         assert offset_event["description"] == original_event["description"]
+
+
+@pytest.mark.parametrize("offset", [100, -100, MAX_OFFSET, -MAX_OFFSET])
+async def test_custom_offset(client, offset):
+    offset_response = await client.get(
+        "/python-custom-offset.ics",
+        params={"offset_days": offset},
+    )
+    offset_calendar = icalendar.Calendar.from_ical(await offset_response.text())
+
+    original_response = await client.get("/python.ics")
+    original_calendar = icalendar.Calendar.from_ical(await original_response.text())
+
+    assert not offset_calendar.is_broken
+    assert not original_calendar.is_broken
+
+    original_events_by_summary = {
+        event["SUMMARY"]: event for event in original_calendar.walk("VEVENT")
+    }
+
+    delta = timedelta(days=offset)
+
+    for offset_event in offset_calendar.walk("VEVENT"):
+        original_event = original_events_by_summary[offset_event["SUMMARY"]]
+
+        assert offset_event["dtstart"].dt == (original_event["dtstart"].dt + delta)
+
+        assert offset_event["dtend"].dt == (original_event["dtend"].dt + delta)
+
+        assert offset_event["dtstamp"].dt == (original_event["dtstamp"].dt + delta)
+
+        assert offset_event["description"] == original_event["description"]
+
+
+@pytest.mark.parametrize("offset", [MAX_OFFSET + 1, -MAX_OFFSET - 1])
+async def test_out_of_bounds_custom_offset(client, offset):
+    response = await client.get(
+        "/python-custom-offset.ics",
+        params={"offset_days": offset},
+    )
+
+    assert response.status == 400
+    assert (
+        await response.text()
+        == f"400: offset_days is too large (must be between -{MAX_OFFSET} and {MAX_OFFSET})"
+    )
