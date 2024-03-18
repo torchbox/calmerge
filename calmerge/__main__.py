@@ -20,6 +20,7 @@ def file_path(path: str):
 
 def serve(args: argparse.Namespace):
     config = Config.from_file(args.config)
+    print(f"Found {len(config.calendars)} calendar(s)")
     run_app(get_aiohttp_app(config), port=int(os.environ.get("PORT", args.port)))
 
 

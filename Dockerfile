@@ -26,4 +26,8 @@ RUN poetry install --no-dev
 
 RUN python -m compileall -q $VIRTUAL_ENV .
 
+RUN touch /app/calendars.toml
+
+EXPOSE 3000
+
 CMD ["/venv/bin/calmerge", "serve"]
