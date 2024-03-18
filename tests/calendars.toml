@@ -24,7 +24,4 @@ name = "python-authed"
 urls = [
     "https://endoflife.date/calendar/python.ics",
 ]
-
-[calendar.auth]
-username = "user"
-password = "password"
+auth = {username = "user", password="password"}

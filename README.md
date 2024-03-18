@@ -4,6 +4,12 @@ A utility to merge calendar feeds together, optionally offsetting by a given num
 
 Individual calendars can be protected by basic authentication if required (values can be read from environment variables, too).
 
+## Usage
+
+Calendars are served based on their [name](#configuration), at `/{name}.ics`.
+
+Calendars which allow custom offsets (`allow_custom_offset = true`) can add `?offset_days=3` to customize the offset. Events can only be offset ±10 years. When not configured, this parameter is ignored.
+
 ## Deployment
 
 `calmerge` is available as a Docker container. Configuration should be mounted to `/app/calendars.toml`. An empty file is provided so the server will start successfully.
