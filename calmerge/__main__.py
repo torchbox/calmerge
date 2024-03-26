@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from . import get_aiohttp_app
 from .config import Config
+from .static import write_calendar
 
 
 def file_path(path: str) -> Path:
@@ -36,6 +37,19 @@ def validate_config(args: argparse.Namespace) -> None:
     return None
 
 
+def write_calendars(args: argparse.Namespace) -> None:
+    output_dir: Path = args.out_dir.resolve()
+
+    output_dir.mkdir(exist_ok=True, parents=True)
+
+    config = Config.from_file(args.config)
+
+    for calendar_config in config.calendars:
+        output_file = output_dir / f"{calendar_config.name}.ics"
+        print("Saving", output_file)
+        write_calendar(calendar_config, output_file)
+
+
 def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="calmerge")
 
@@ -49,6 +63,10 @@ def get_parser() -> argparse.ArgumentParser:
 
     validate_parser = subparsers.add_parser("validate")
     validate_parser.set_defaults(func=validate_config)
+
+    write_parser = subparsers.add_parser("write")
+    write_parser.add_argument("out_dir", type=Path)
+    write_parser.set_defaults(func=write_calendars)
 
     return parser
 

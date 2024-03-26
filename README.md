@@ -10,6 +10,18 @@ Calendars are served based on their [name](#configuration), at `/{name}.ics`.
 
 Calendars which allow custom offsets (`allow_custom_offset = true`) can add `?offset_days=3` to customize the offset. Events can only be offset ±10 years. When not configured, this parameter is ignored.
 
+### Static
+
+`calmerge` also supports being used as a static content generator - whereby calendars are saved to files rather than being served by a web server.
+
+To do this, run:
+
+```
+calmerge write ./calendars
+```
+
+Each calendar will be saved as a `.ics` file based on its name to the `./calendars` directory.
+
 ## Deployment
 
 `calmerge` is available as a Docker container. Configuration should be mounted to `/app/calendars.toml`. An empty file is provided so the server will start successfully.

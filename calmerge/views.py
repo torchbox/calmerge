@@ -36,4 +36,4 @@ async def calendar(request: web.Request) -> web.Response:
     elif offset_days := calendar_config.offset_days:
         offset_calendar(calendar, offset_days)
 
-    return web.Response(body=calendar.to_ical(sorted=True))
+    return web.Response(body=calendar.to_ical())
