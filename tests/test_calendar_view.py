@@ -83,7 +83,7 @@ async def test_offset_calendar_matches(client: TestClient) -> None:
 @pytest.mark.parametrize("offset", [100, -100, MAX_OFFSET, -MAX_OFFSET])
 async def test_custom_offset(client: TestClient, offset: int) -> None:
     offset_response = await client.get(
-        "/python-custom-offset.ics",
+        "/python-offset.ics",
         params={"offset_days": offset},
     )
     offset_calendar = icalendar.Calendar.from_ical(await offset_response.text())
@@ -115,7 +115,7 @@ async def test_custom_offset(client: TestClient, offset: int) -> None:
 @pytest.mark.parametrize("offset", [MAX_OFFSET + 1, -MAX_OFFSET - 1])
 async def test_out_of_bounds_custom_offset(client: TestClient, offset: int) -> None:
     response = await client.get(
-        "/python-custom-offset.ics",
+        "/python-offset.ics",
         params={"offset_days": offset},
     )
 
@@ -126,10 +126,10 @@ async def test_out_of_bounds_custom_offset(client: TestClient, offset: int) -> N
     )
 
 
-@pytest.mark.parametrize("offset", ["invalid", "", "\0"])
+@pytest.mark.parametrize("offset", ["invalid", "\0"])
 async def test_invalid_offset(client: TestClient, offset: str) -> None:
     response = await client.get(
-        "/python-custom-offset.ics",
+        "/python-offset.ics",
         params={"offset_days": offset},
     )
 

@@ -37,7 +37,6 @@ class CalendarConfig(BaseModel):
     name: str
     urls: list[HttpUrl]
     offset_days: int = Field(default=0, le=MAX_OFFSET, ge=-MAX_OFFSET)
-    allow_custom_offset: bool = False
     auth: AuthConfig | None = None
 
     @field_validator("urls")

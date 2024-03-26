@@ -24,8 +24,10 @@ async def calendar(request: web.Request) -> web.Response:
 
     calendar = await fetch_merged_calendar(calendar_config)
 
-    if calendar_config.allow_custom_offset:
-        offset_days = try_parse_int(request.query.get("offset_days", ""))
+    offset_days = calendar_config.offset_days
+
+    if custom_offset_days := request.query.get("offset_days", ""):
+        offset_days = try_parse_int(custom_offset_days)
 
         if offset_days is None:
             raise web.HTTPBadRequest(reason="offset_days is invalid")
@@ -34,9 +36,7 @@ async def calendar(request: web.Request) -> web.Response:
                 reason=f"offset_days is too large (must be between -{MAX_OFFSET} and {MAX_OFFSET})"
             )
 
-        offset_calendar(calendar, offset_days)
-
-    elif offset_days := calendar_config.offset_days:
+    if offset_days is not None:
         offset_calendar(calendar, offset_days)
 
     return web.Response(body=calendar.to_ical())
