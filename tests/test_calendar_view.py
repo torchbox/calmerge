@@ -16,6 +16,11 @@ async def test_retrieves_calendars(client: TestClient) -> None:
     assert not calendar.is_broken
 
 
+async def test_unknown_calendar(client: TestClient) -> None:
+    response = await client.get("/unknown.ics")
+    assert response.status == 404
+
+
 async def test_404_without_auth(client: TestClient) -> None:
     response = await client.get("/python-authed.ics")
     assert response.status == 404
@@ -119,3 +124,14 @@ async def test_out_of_bounds_custom_offset(client: TestClient, offset: int) -> N
         await response.text()
         == f"400: offset_days is too large (must be between -{MAX_OFFSET} and {MAX_OFFSET})"
     )
+
+
+@pytest.mark.parametrize("offset", ["invalid", "", "\0"])
+async def test_invalid_offset(client: TestClient, offset: str) -> None:
+    response = await client.get(
+        "/python-custom-offset.ics",
+        params={"offset_days": offset},
+    )
+
+    assert response.status == 400
+    assert await response.text() == "400: offset_days is invalid"

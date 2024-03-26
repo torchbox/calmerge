@@ -4,6 +4,7 @@ from pathlib import Path
 
 from aiohttp.web import run_app
 from pydantic import ValidationError
+from tomllib import TOMLDecodeError
 
 from . import get_aiohttp_app
 from .config import Config
@@ -28,7 +29,7 @@ def serve(args: argparse.Namespace) -> None:
 def validate_config(args: argparse.Namespace) -> None:
     try:
         Config.from_file(args.config)
-    except ValidationError as e:
+    except (ValidationError, TOMLDecodeError) as e:
         print(e)
         exit(1)
     else:

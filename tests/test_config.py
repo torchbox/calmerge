@@ -1,3 +1,5 @@
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -52,3 +54,45 @@ def test_empty_config(tmp_path: Path) -> None:
 def test_invalid_file() -> None:
     with pytest.raises(TOMLDecodeError):
         Config.from_file(Path(__file__).resolve())
+
+
+def test_validate_config_command(tmp_path: Path, config_path: Path) -> None:
+    result = subprocess.run(
+        [sys.executable, "-m", "calmerge", "--config", str(config_path), "validate"],
+        stdout=subprocess.PIPE,
+    )
+    assert result.returncode == 0
+    assert result.stdout == b"Config is valid!\n"
+
+
+def test_validate_config_command_invalid_config() -> None:
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "calmerge",
+            "--config",
+            str(Path(__file__).resolve()),
+            "validate",
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert result.returncode == 1
+
+
+def test_validate_config_command_missing_file(tmp_path: Path) -> None:
+    test_config_file = tmp_path / "test.toml"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "calmerge",
+            "--config",
+            str(test_config_file),
+            "validate",
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert result.returncode == 2
