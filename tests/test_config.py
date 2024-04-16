@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from pydantic_core import Url
 from tomllib import TOMLDecodeError
 
-from calmerge.config import AuthConfig, CalendarConfig, Config
+from calmerge.config import MAX_OFFSET, AuthConfig, CalendarConfig, Config
 
 
 def test_non_unique_urls() -> None:
@@ -15,6 +15,31 @@ def test_non_unique_urls() -> None:
         CalendarConfig(name="test", urls=["https://example.com"] * 10)  # type: ignore [list-item]
 
     assert e.value.errors()[0]["msg"] == "URLs must be unique"
+
+
+def test_non_unique_offset_days() -> None:
+    with pytest.raises(ValidationError) as e:
+        CalendarConfig(
+            name="test",
+            urls=["https://example.com"],  # type: ignore [list-item]
+            offset_days=[1, 2, 3, 2, 1],
+        )
+
+    assert e.value.errors()[0]["msg"] == "Offset days must be unique"
+
+
+def test_invalid_offset_days() -> None:
+    with pytest.raises(ValidationError) as e:
+        CalendarConfig(
+            name="test",
+            urls=["https://example.com"],  # type: ignore [list-item]
+            offset_days=[MAX_OFFSET + 1],
+        )
+
+    assert (
+        e.value.errors()[0]["msg"]
+        == f"Offset days must be between -{MAX_OFFSET} and {MAX_OFFSET}"
+    )
 
 
 def test_urls_expand_env_var(monkeypatch: pytest.MonkeyPatch) -> None:

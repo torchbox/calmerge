@@ -36,16 +36,38 @@ async def fetch_merged_calendar(calendar_config: CalendarConfig) -> icalendar.Ca
     return merged_calendar
 
 
-def offset_calendar(calendar: icalendar.Calendar, offset_days: int) -> None:
+def shift_event_by_offset(event: icalendar.cal.Component, offset: timedelta) -> None:
     """
-    Mutate a calendar and move events by a given offset
+    Mutate a calendar event and shift its dates to a given offset
     """
-    offset = timedelta(days=offset_days)
+    if "DTSTART" in event:
+        event["DTSTART"].dt += offset
+    if "DTEND" in event:
+        event["DTEND"].dt += offset
+    if "DTSTAMP" in event:
+        event["DTSTAMP"].dt += offset
+
+
+def create_offset_calendar_events(
+    calendar: icalendar.Calendar, duplicate_days: list[int]
+) -> None:
+    """
+    Mutate a calendar and add additional events at given offsets
+    """
+    new_components = []
 
     for component in calendar.walk():
-        if "DTSTART" in component:
-            component["DTSTART"].dt += offset
-        if "DTEND" in component:
-            component["DTEND"].dt += offset
-        if "DTSTAMP" in component:
-            component["DTSTAMP"].dt += offset
+        for days in duplicate_days:
+            day_component = component.copy()
+
+            shift_event_by_offset(day_component, timedelta(days=days))
+
+            if "SUMMARY" in day_component:
+                day_component["SUMMARY"] += (
+                    f" ({days} days {'after' if days > 0 else 'before'})"
+                )
+
+            new_components.append(day_component)
+
+    for component in new_components:
+        calendar.add_component(component)

@@ -1,8 +1,6 @@
 from aiohttp import web
 
-from .calendars import fetch_merged_calendar, offset_calendar
-from .config import MAX_OFFSET
-from .utils import try_parse_int
+from .calendars import create_offset_calendar_events, fetch_merged_calendar
 
 
 async def healthcheck(request: web.Request) -> web.Response:
@@ -24,19 +22,7 @@ async def calendar(request: web.Request) -> web.Response:
 
     calendar = await fetch_merged_calendar(calendar_config)
 
-    offset_days = calendar_config.offset_days
-
-    if custom_offset_days := request.query.get("offset_days", ""):
-        offset_days = try_parse_int(custom_offset_days)
-
-        if offset_days is None:
-            raise web.HTTPBadRequest(reason="offset_days is invalid")
-        elif abs(offset_days) > MAX_OFFSET:
-            raise web.HTTPBadRequest(
-                reason=f"offset_days is too large (must be between -{MAX_OFFSET} and {MAX_OFFSET})"
-            )
-
-    if offset_days is not None:
-        offset_calendar(calendar, offset_days)
+    if offset_days := calendar_config.offset_days:
+        create_offset_calendar_events(calendar, offset_days)
 
     return web.Response(body=calendar.to_ical())

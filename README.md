@@ -8,7 +8,7 @@ Individual calendars can be protected by basic authentication if required (value
 
 Calendars are served based on their [name](#configuration), at `/{name}.ics`.
 
-Calendars which allow custom offsets (`allow_custom_offset = true`) can add `?offset_days=3` to customize the offset. Events can only be offset ±10 years. When not configured, this parameter is ignored.
+Additional events cen be added at offsets from the original date using the `offset_days` configuration. Events can only be offset ±10 years.
 
 ### Static
 

@@ -36,7 +36,7 @@ class AuthConfig(BaseModel):
 class CalendarConfig(BaseModel):
     name: str
     urls: list[HttpUrl]
-    offset_days: int = Field(default=0, le=MAX_OFFSET, ge=-MAX_OFFSET)
+    offset_days: list[int] = Field(default_factory=list)
     auth: AuthConfig | None = None
 
     @field_validator("urls")
@@ -50,6 +50,28 @@ class CalendarConfig(BaseModel):
     @classmethod
     def expand_url_vars(cls, urls: list[str]) -> list[str]:
         return [expandvars(url) for url in urls]
+
+    @field_validator("offset_days")
+    @classmethod
+    def validate_offset_days(cls, offset_days: list[int]) -> list[int]:
+        if len(set(offset_days)) != len(offset_days):
+            raise PydanticCustomError(
+                "unique_offset_days", "Offset days must be unique"
+            )
+
+        if any(day == 0 for day in offset_days):
+            raise PydanticCustomError(
+                "zero_offset_days",
+                "Offset days must not be zero",
+            )
+
+        if not all(-MAX_OFFSET <= day <= MAX_OFFSET for day in offset_days):
+            raise PydanticCustomError(
+                "offset_days_range",
+                f"Offset days must be between -{MAX_OFFSET} and {MAX_OFFSET}",
+            )
+
+        return offset_days
 
 
 class Config(BaseModel):
