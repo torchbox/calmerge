@@ -64,7 +64,7 @@ def create_offset_calendar_events(
 
             if "SUMMARY" in day_component:
                 day_component["SUMMARY"] += (
-                    f" ({days} days {'after' if days > 0 else 'before'})"
+                    f" ({abs(days)} days {'after' if days > 0 else 'before'})"
                 )
 
             new_components.append(day_component)
