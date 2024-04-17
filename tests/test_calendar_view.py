@@ -55,11 +55,21 @@ async def test_offset_calendar_matches(client: TestClient) -> None:
         len(offset_calendar.walk("VEVENT")) == len(original_calendar.walk("VEVENT")) * 2
     )
 
+    offset_events = [
+        event
+        for event in offset_calendar.walk("VEVENT")
+        if event["SUMMARY"].endswith("(365 days after)")
+    ]
+
+    assert len(offset_events) == len(original_calendar.walk("VEVENT"))
+
     original_events_by_summary = {
         event["SUMMARY"]: event for event in original_calendar.walk("VEVENT")
     }
 
-    for offset_event in offset_calendar.walk("VEVENT"):
+    for offset_event in offset_events:
+        assert offset_event["SUMMARY"].endswith(" (365 days after)")
+
         original_event = original_events_by_summary[
             offset_event["SUMMARY"].removesuffix(" (365 days after)")
         ]
@@ -76,4 +86,7 @@ async def test_offset_calendar_matches(client: TestClient) -> None:
             original_event["dtstamp"].dt + timedelta(days=365)
         )
 
-        assert offset_event["description"] == original_event["description"]
+        assert offset_event["description"].startswith(original_event["description"])
+        assert offset_event["description"].endswith(
+            "Note: This event has been offset 365 days."
+        )

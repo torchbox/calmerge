@@ -67,6 +67,11 @@ def create_offset_calendar_events(
                     f" ({abs(days)} days {'after' if days > 0 else 'before'})"
                 )
 
+            if "DESCRIPTION" in day_component:
+                day_component["DESCRIPTION"] += (
+                    f"\n\nNote: This event has been offset {days} days."
+                )
+
             new_components.append(day_component)
 
     for component in new_components:
