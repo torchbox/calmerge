@@ -46,7 +46,7 @@ def write_calendars(args: argparse.Namespace) -> None:
     config = Config.from_file(args.config)
 
     for calendar_config in config.calendars:
-        output_file = output_dir / f"{calendar_config.name}.ics"
+        output_file = output_dir / f"{calendar_config.slug}.ics"
         print("Saving", output_file)
         write_calendar(calendar_config, output_file)
 

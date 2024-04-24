@@ -76,3 +76,17 @@ def create_offset_calendar_events(
 
     for component in new_components:
         calendar.add_component(component)
+
+
+def set_calendar_metadata(
+    calendar: icalendar.Calendar, calendar_config: CalendarConfig
+) -> None:
+    """
+    Mutate a calendar to set metadata based on config
+    """
+
+    if calendar_config.name:
+        calendar.add("X-WR-CALNAME", calendar_config.name)
+
+    if calendar_config.description:
+        calendar.add("X-WR-CALDESC", calendar_config.description)

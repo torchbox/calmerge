@@ -12,6 +12,9 @@ async def test_retrieves_calendars(client: TestClient) -> None:
     calendar = icalendar.Calendar.from_ical(await response.text())
     assert not calendar.is_broken
 
+    assert calendar["X-WR-CALNAME"] == "Python"
+    assert calendar["X-WR-CALDESC"] == "Python EOL"
+
 
 async def test_unknown_calendar(client: TestClient) -> None:
     response = await client.get("/unknown.ics")

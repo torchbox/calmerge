@@ -12,7 +12,7 @@ from calmerge.config import MAX_OFFSET, AuthConfig, CalendarConfig, Config
 
 def test_non_unique_urls() -> None:
     with pytest.raises(ValidationError) as e:
-        CalendarConfig(name="test", urls=["https://example.com"] * 10)  # type: ignore [list-item]
+        CalendarConfig(slug="test", urls=["https://example.com"] * 10)  # type: ignore [list-item]
 
     assert e.value.errors()[0]["msg"] == "URLs must be unique"
 
@@ -20,7 +20,7 @@ def test_non_unique_urls() -> None:
 def test_non_unique_offset_days() -> None:
     with pytest.raises(ValidationError) as e:
         CalendarConfig(
-            name="test",
+            slug="test",
             urls=["https://example.com"],  # type: ignore [list-item]
             offset_days=[1, 2, 3, 2, 1],
         )
@@ -31,7 +31,7 @@ def test_non_unique_offset_days() -> None:
 def test_invalid_offset_days() -> None:
     with pytest.raises(ValidationError) as e:
         CalendarConfig(
-            name="test",
+            slug="test",
             urls=["https://example.com"],  # type: ignore [list-item]
             offset_days=[MAX_OFFSET + 1],
         )
@@ -46,7 +46,7 @@ def test_urls_expand_env_var(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("FOO", "BAR")
 
     calendar_config = CalendarConfig(
-        name="test",
+        slug="test",
         urls=["https://example.com/$FOO"],  # type: ignore [list-item]
     )
 

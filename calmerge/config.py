@@ -34,7 +34,9 @@ class AuthConfig(BaseModel):
 
 
 class CalendarConfig(BaseModel):
-    name: str
+    slug: str
+    name: str | None = None
+    description: str | None = None
     urls: list[HttpUrl]
     offset_days: list[int] = Field(default_factory=list)
     auth: AuthConfig | None = None
@@ -82,7 +84,7 @@ class Config(BaseModel):
         with path.open(mode="rb") as f:
             return Config.model_validate(tomllib.load(f))
 
-    def get_calendar_by_name(self, name: str) -> CalendarConfig | None:
+    def get_calendar_by_slug(self, slug: str) -> CalendarConfig | None:
         return next(
-            (calendar for calendar in self.calendars if calendar.name == name), None
+            (calendar for calendar in self.calendars if calendar.slug == slug), None
         )

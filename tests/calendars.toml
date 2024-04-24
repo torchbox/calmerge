@@ -1,18 +1,24 @@
 [[calendar]]
-name = "python"
+slug = "python"
+name = "Python"
+description = "Python EOL"
 urls = [
     "https://endoflife.date/calendar/python.ics",
 ]
 
 [[calendar]]
-name = "python-offset"
+slug = "python-offset"
+name = "Python (with offset)"
+description = "Python EOL (with offset)"
 urls = [
     "https://endoflife.date/calendar/python.ics",
 ]
 offset_days = [365]
 
 [[calendar]]
-name = "python-authed"
+slug = "python-authed"
+name = "Python (with auth)"
+description = "Python EOL (with auth)"
 urls = [
     "https://endoflife.date/calendar/python.ics",
 ]

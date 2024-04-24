@@ -11,7 +11,7 @@ def get_aiohttp_app(config: Config) -> web.Application:
     app.add_routes(
         [
             web.get("/.health/", views.healthcheck),
-            web.get("/{name}.ics", views.calendar),
+            web.get("/{slug}.ics", views.calendar),
         ]
     )
 
