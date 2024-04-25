@@ -90,3 +90,8 @@ def set_calendar_metadata(
 
     if calendar_config.description:
         calendar.add("X-WR-CALDESC", calendar_config.description)
+
+    calendar.add(
+        "X-PUBLISHED-TTL",
+        icalendar.vDuration(timedelta(hours=calendar_config.ttl_hours)),
+    )

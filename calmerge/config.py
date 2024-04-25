@@ -40,6 +40,7 @@ class CalendarConfig(BaseModel):
     urls: list[HttpUrl]
     offset_days: list[int] = Field(default_factory=list)
     auth: AuthConfig | None = None
+    ttl_hours: int = Field(default=12, gt=0)
 
     @field_validator("urls")
     @classmethod

@@ -31,4 +31,10 @@ async def calendar(request: web.Request) -> web.Response:
 
     set_calendar_metadata(calendar, calendar_config)
 
-    return web.Response(body=calendar.to_ical())
+    return web.Response(
+        body=calendar.to_ical(),
+        headers={
+            "Cache-Control": f"max-age={calendar_config.ttl_hours * 60 * 60}",
+            "Vary": "Authorization",
+        },
+    )
