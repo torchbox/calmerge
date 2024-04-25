@@ -17,6 +17,7 @@ async def test_retrieves_calendars(client: TestClient) -> None:
     assert calendar["X-PUBLISHED-TTL"] == "PT12H"  # 12 hours
 
     assert response.headers["Cache-Control"] == "max-age=43200"
+    assert response.headers["Content-Disposition"] == "attachment; filename=python.ics"
 
 
 async def test_unknown_calendar(client: TestClient) -> None:

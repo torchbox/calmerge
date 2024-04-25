@@ -34,7 +34,9 @@ async def calendar(request: web.Request) -> web.Response:
     return web.Response(
         body=calendar.to_ical(),
         headers={
+            "Content-Type": "text/calendar",
             "Cache-Control": f"max-age={calendar_config.ttl_hours * 60 * 60}",
             "Vary": "Authorization",
+            "Content-Disposition": f"attachment; filename={calendar_config.slug}.ics",
         },
     )
