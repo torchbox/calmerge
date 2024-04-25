@@ -6,7 +6,7 @@ Individual calendars can be protected by basic authentication if required (value
 
 ## Usage
 
-Calendars are served based on their [name](#configuration), at `/{name}.ics`.
+Calendars are served based on their [slug](#configuration), at `/{slug}.ics`.
 
 Additional events cen be added at offsets from the original date using the `offset_days` configuration. Events can only be offset ±10 years.
 
@@ -20,7 +20,7 @@ To do this, run:
 calmerge write ./calendars
 ```
 
-Each calendar will be saved as a `.ics` file based on its name to the `./calendars` directory.
+Each calendar will be saved as a `.ics` file based on its slug to the `./calendars` directory.
 
 ## Deployment
 
@@ -45,7 +45,7 @@ Example configuration:
 
 ```toml
 [[calendar]]
-name = "python"
+slug = "python"
 urls = [
     "https://endoflife.date/calendar/python.ics",
 ]
