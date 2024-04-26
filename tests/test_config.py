@@ -42,6 +42,15 @@ def test_invalid_offset_days() -> None:
     )
 
 
+def test_duplicate_calendar_slug() -> None:
+    calendar_config = CalendarConfig(slug="test", urls=["https://example.com"])  # type: ignore [list-item]
+
+    with pytest.raises(ValidationError) as e:
+        Config(calendar=[calendar_config] * 5)
+
+    assert e.value.errors()[0]["msg"] == "Calendar slugs must be unique"
+
+
 def test_urls_expand_env_var(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("FOO", "BAR")
 

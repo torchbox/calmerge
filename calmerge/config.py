@@ -80,6 +80,18 @@ class CalendarConfig(BaseModel):
 class Config(BaseModel):
     calendars: list[CalendarConfig] = Field(alias="calendar", default_factory=list)
 
+    @field_validator("calendars")
+    @classmethod
+    def validate_unique_calendar_slugs(
+        cls, calendars: list[CalendarConfig]
+    ) -> list[CalendarConfig]:
+        calendar_slugs = {calendar.slug for calendar in calendars}
+
+        if len(calendar_slugs) != len(calendars):
+            raise PydanticCustomError("calendar_slugs", "Calendar slugs must be unique")
+
+        return calendars
+
     @classmethod
     def from_file(cls, path: Path) -> "Config":
         with path.open(mode="rb") as f:
