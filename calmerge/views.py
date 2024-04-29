@@ -1,4 +1,5 @@
-from aiohttp import web
+import aiohttp_jinja2
+from aiohttp import hdrs, web
 
 from .calendars import (
     create_offset_calendar_events,
@@ -34,9 +35,24 @@ async def calendar(request: web.Request) -> web.Response:
     return web.Response(
         body=calendar.to_ical(),
         headers={
-            "Content-Type": "text/calendar",
-            "Cache-Control": f"max-age={calendar_config.ttl_hours * 60 * 60}",
-            "Vary": "Authorization",
-            "Content-Disposition": f"attachment; filename={calendar_config.slug}.ics",
+            hdrs.CONTENT_TYPE: "text/calendar",
+            hdrs.CACHE_CONTROL: f"max-age={calendar_config.ttl_hours * 60 * 60}",
+            hdrs.VARY: "Authorization",
+            hdrs.CONTENT_DISPOSITION: f"attachment; filename={calendar_config.slug}.ics",
         },
     )
+
+
+async def calendar_listing(request: web.Request) -> web.Response:
+    config = request.app["config"]
+
+    if config.listing.auth and not config.listing.auth.validate_header(
+        request.headers.get("Authorization", "")
+    ):
+        raise web.HTTPUnauthorized(headers={hdrs.WWW_AUTHENTICATE: "Basic"})
+
+    response = aiohttp_jinja2.render_template("listing.html", request, {})
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; style-src 'unsafe-inline'"
+    )
+    return response

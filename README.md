@@ -22,6 +22,19 @@ calmerge write ./calendars
 
 Each calendar will be saved as a `.ics` file based on its slug to the `./calendars` directory.
 
+### Listing
+
+A listing page can be served at `/all/` using:
+
+```toml
+[listing]
+enabled = true
+```
+
+Basic auth can be enabled using `auth = `.
+
+Basic auth credentials for each calendar are not output in the listing. This can be enabled enabled using `include_credentials` on the `[listing]`.
+
 ## Deployment
 
 `calmerge` is available as a Docker container. Configuration should be mounted to `/app/calendars.toml`. An empty file is provided so the server will start successfully.

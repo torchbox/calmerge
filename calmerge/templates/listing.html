@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calmerge</title>
+    <meta name="robots" content="noindex" />
+    <style>
+      table {
+        min-width: 50vw;
+        max-width: 100vw;
+      }
+
+      td {
+        text-align: center;
+        padding: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calmerge</h1>
+    <table>
+      <tr>
+        <th>URL</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Offsets</th>
+        <th>TTL</th>
+        <th>Auth</th>
+        <th>+</th>
+      </tr>
+      {% for calendar in config.calendars|sort(attribute="slug") %}
+        <tr>
+          {% with calendar_url = url('calendar', slug=calendar.slug) %}
+            <td><a href="{{ calendar_url }}">{{ calendar_url }}</a></td>
+          {% endwith %}
+          <td>{{ calendar.name|default("-", true) }}</td>
+          <td>{{ calendar.description|default("-", true) }}</td>
+          <td>{{ calendar.offset_days|sort|join(", ") }}</td>
+          <td>{{ calendar.ttl_hours }} hours</td>
+          {% if config.listing.include_credentials and calendar.auth %}
+            <td><code>{{ calendar.auth.username }}:{{ calendar.auth.password }}</code></td>
+          {% else %}
+            <td>{{ "Yes" if calendar.auth else "No" }}</td>
+          {% endif %}
+          <td><a href="{{ calendar|webcal_url }}">Add to calendar</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

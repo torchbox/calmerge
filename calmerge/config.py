@@ -77,8 +77,15 @@ class CalendarConfig(BaseModel):
         return offset_days
 
 
+class ListingConfig(BaseModel):
+    enabled: bool = False
+    auth: AuthConfig | None = None
+    include_credentials: bool = False
+
+
 class Config(BaseModel):
     calendars: list[CalendarConfig] = Field(alias="calendar", default_factory=list)
+    listing: ListingConfig = Field(default_factory=ListingConfig)
 
     @field_validator("calendars")
     @classmethod

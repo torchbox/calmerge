@@ -130,3 +130,8 @@ def test_validate_config_command_missing_file(tmp_path: Path) -> None:
         stderr=subprocess.PIPE,
     )
     assert result.returncode == 2
+
+
+def test_default_listing_config() -> None:
+    config = Config()
+    assert not config.listing.enabled

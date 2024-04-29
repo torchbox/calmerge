@@ -1,3 +1,8 @@
+[listing]
+enabled = true
+auth = {username = "user", password="password"}
+include_credentials = true
+
 [[calendar]]
 slug = "python"
 name = "Python"
