@@ -2,7 +2,13 @@
 
 A utility to merge calendar feeds together, optionally offsetting by a given number of days
 
-Individual calendars can be protected by basic authentication if required (values can be read from environment variables, too).
+## Features
+
+- Merge multiple calendars into a single calendar
+- Create duplicate events at a given offset (useful for showing reminders as calendar events)
+- Use basic auth to protect calendars
+- Use environment variables to include sensitive parameters in upstream calendar URLs or basic auth credentials
+- [Static](#static) output option
 
 ## Usage
 
