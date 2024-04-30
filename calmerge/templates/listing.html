@@ -31,17 +31,20 @@
         <tr>
           {% with calendar_url = url('calendar', slug=calendar.slug) %}
             <td><a href="{{ calendar_url }}">{{ calendar_url }}</a></td>
+            <td>{{ calendar.name|default("-", true) }}</td>
+            <td>{{ calendar.description|default("-", true) }}</td>
+            <td>{{ calendar.offset_days|sort|join(", ") }}</td>
+            <td>{{ calendar.ttl_hours }} hours</td>
+            {% if config.listing.include_credentials and calendar.auth %}
+              <td><code>{{ calendar.auth.username }}:{{ calendar.auth.password }}</code></td>
+            {% else %}
+              <td>{{ "Yes" if calendar.auth else "No" }}</td>
+            {% endif %}
+            <td>
+              <a href="{{ calendar_url }}">{{ calendar_url.scheme|default("http", true) }}</a>
+              <a href="{{ calendar|webcal_url }}">webcal</a>
+            </td>
           {% endwith %}
-          <td>{{ calendar.name|default("-", true) }}</td>
-          <td>{{ calendar.description|default("-", true) }}</td>
-          <td>{{ calendar.offset_days|sort|join(", ") }}</td>
-          <td>{{ calendar.ttl_hours }} hours</td>
-          {% if config.listing.include_credentials and calendar.auth %}
-            <td><code>{{ calendar.auth.username }}:{{ calendar.auth.password }}</code></td>
-          {% else %}
-            <td>{{ "Yes" if calendar.auth else "No" }}</td>
-          {% endif %}
-          <td><a href="{{ calendar|webcal_url }}">Add to calendar</a></td>
         </tr>
       {% endfor %}
     </table>
