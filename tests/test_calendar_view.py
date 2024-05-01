@@ -41,14 +41,6 @@ async def test_requires_auth(client: TestClient) -> None:
 
 
 async def test_offset(client: TestClient) -> None:
-    response = await client.get("/python-offset.ics")
-    assert response.status == 200
-
-    calendar = icalendar.Calendar.from_ical(await response.text())
-    assert not calendar.is_broken
-
-
-async def test_offset_calendar_matches(client: TestClient) -> None:
     offset_response = await client.get("/python-offset.ics")
     offset_calendar = icalendar.Calendar.from_ical(await offset_response.text())
 
@@ -62,6 +54,14 @@ async def test_offset_calendar_matches(client: TestClient) -> None:
         len(offset_calendar.walk("VEVENT")) == len(original_calendar.walk("VEVENT")) * 2
     )
 
+
+async def test_offset_calendar_events(client: TestClient) -> None:
+    offset_response = await client.get("/python-offset.ics")
+    offset_calendar = icalendar.Calendar.from_ical(await offset_response.text())
+
+    original_response = await client.get("/python.ics")
+    original_calendar = icalendar.Calendar.from_ical(await original_response.text())
+
     offset_events = [
         event
         for event in offset_calendar.walk("VEVENT")
@@ -69,6 +69,8 @@ async def test_offset_calendar_matches(client: TestClient) -> None:
     ]
 
     assert len(offset_events) == len(original_calendar.walk("VEVENT"))
+
+    assert len({str(event["UID"]) for event in offset_events}) == len(offset_events)
 
     original_events_by_summary = {
         event["SUMMARY"]: event for event in original_calendar.walk("VEVENT")
@@ -93,3 +95,24 @@ async def test_offset_calendar_matches(client: TestClient) -> None:
         assert offset_event["description"].endswith(
             "Note: This event has been offset 365 days."
         )
+
+
+async def test_offset_calendar_contains_original_events(client: TestClient) -> None:
+    offset_response = await client.get("/python-offset.ics")
+    offset_calendar = icalendar.Calendar.from_ical(await offset_response.text())
+
+    original_response = await client.get("/python.ics")
+    original_calendar = icalendar.Calendar.from_ical(await original_response.text())
+
+    original_events = [
+        event
+        for event in offset_calendar.walk("VEVENT")
+        if not event["SUMMARY"].endswith("(365 days after)")
+    ]
+
+    assert len(original_events) == len(original_calendar.walk("VEVENT"))
+
+    for event in original_calendar.walk("VEVENT"):
+        assert event in original_events
+
+    assert len({str(event["UID"]) for event in original_events}) == len(original_events)
