@@ -1,5 +1,7 @@
 import asyncio
+from copy import deepcopy
 from datetime import timedelta
+from uuid import uuid4
 
 import icalendar
 from aiocache import Cache
@@ -53,10 +55,12 @@ def create_offset_calendar_events(
     Mutate a calendar and add additional events at given offsets
     """
     new_components = []
-
-    for component in calendar.walk():
+    for component in calendar.walk("VEVENT"):
         for days in duplicate_days:
-            day_component = component.copy()
+            day_component = deepcopy(component)
+
+            # Create a new ID so calendar software shows it as a different event
+            day_component["UID"] = str(uuid4())
 
             shift_event_by_offset(day_component, timedelta(days=days))
 
