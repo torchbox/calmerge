@@ -89,10 +89,6 @@ async def test_offset_calendar_matches(client: TestClient) -> None:
             original_event["dtend"].dt + timedelta(days=365)
         )
 
-        assert offset_event["dtstamp"].dt == (
-            original_event["dtstamp"].dt + timedelta(days=365)
-        )
-
         assert offset_event["description"].startswith(original_event["description"])
         assert offset_event["description"].endswith(
             "Note: This event has been offset 365 days."

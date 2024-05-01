@@ -44,8 +44,6 @@ def shift_event_by_offset(event: icalendar.cal.Component, offset: timedelta) -> 
         event["DTSTART"].dt += offset
     if "DTEND" in event:
         event["DTEND"].dt += offset
-    if "DTSTAMP" in event:
-        event["DTSTAMP"].dt += offset
 
 
 def create_offset_calendar_events(
