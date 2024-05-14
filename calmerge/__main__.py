@@ -8,7 +8,7 @@ from tomllib import TOMLDecodeError
 
 from . import get_aiohttp_app
 from .config import Config
-from .static import write_calendar
+from .write import write_calendar
 
 
 def file_path(path: str) -> Path:
