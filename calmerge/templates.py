@@ -14,12 +14,12 @@ async def config_context_processor(request: web.Request) -> dict:
 
 
 @jinja2.pass_context
-def webcal_url(context: dict, calendar_config: CalendarConfig) -> URL:
+def calendar_url(context: dict, calendar_config: CalendarConfig) -> URL:
     request: web.Request = context["request"]
     config = context["config"]
     calendar_url = context["url"](context, "calendar", slug=calendar_config.slug)
 
-    url = request.url.with_scheme("webcal").with_path(calendar_url.path)
+    url = request.url.with_path(calendar_url.path)
 
     if config.listing.include_credentials and calendar_config.auth is not None:
         url = url.with_user(calendar_config.auth.username).with_password(

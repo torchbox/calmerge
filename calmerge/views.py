@@ -56,3 +56,16 @@ async def calendar_listing(request: web.Request) -> web.Response:
         "default-src 'self'; style-src 'unsafe-inline'"
     )
     return response
+
+
+async def calendar_html(request: web.Request) -> web.Response:
+    config = request.app["config"]
+
+    calendar_config = config.get_calendar_by_slug(request.match_info["slug"])
+
+    if calendar_config is None:
+        raise web.HTTPNotFound()
+
+    return aiohttp_jinja2.render_template(
+        "calendar.html", request, {"calendar": calendar_config}
+    )

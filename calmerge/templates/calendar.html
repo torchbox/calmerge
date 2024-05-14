@@ -1,0 +1,22 @@
+{% set calendar_name = calendar.name|default(calendar.slug, true) %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ calendar_name }}</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="/static/calendar.css" />
+  </head>
+  <body>
+    <h1>{{ calendar_name }}</h1>
+    <p>{{ calendar.description }}</p>
+    <p><a href="{{ calendar|calendar_url }}">{{ calendar|calendar_url }}</a></p>
+
+    <p id="calendar-message">Events are loading...</p>
+    <div id='calendar' data-url="{{ calendar|calendar_url }}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js" integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" integrity="sha256-i4vDW9EgtaJmeauDDymtNF2omPZ1fCKpf4w1gBlU1IE=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js" integrity="sha256-WwbtQlF1JHoTRN5Ma84E0HPmjgvdbMzJ5bzJFarfQRE=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/static/calendar.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </body>
+</html>

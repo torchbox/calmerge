@@ -25,26 +25,26 @@
         <th>Offsets</th>
         <th>TTL</th>
         <th>Auth</th>
+        <th>Preview</th>
         <th>+</th>
       </tr>
       {% for calendar in config.calendars|sort(attribute="slug") %}
         <tr>
-          {% with calendar_url = url('calendar', slug=calendar.slug) %}
-            <td><a href="{{ calendar_url }}">{{ calendar_url }}</a></td>
-            <td>{{ calendar.name|default("-", true) }}</td>
-            <td>{{ calendar.description|default("-", true) }}</td>
-            <td>{{ calendar.offset_days|sort|join(", ") }}</td>
-            <td>{{ calendar.ttl_hours }} hours</td>
-            {% if config.listing.include_credentials and calendar.auth %}
-              <td><code>{{ calendar.auth.username }}:{{ calendar.auth.password }}</code></td>
-            {% else %}
-              <td>{{ "Yes" if calendar.auth else "No" }}</td>
-            {% endif %}
-            <td>
-              <a href="{{ calendar_url }}">{{ calendar_url.scheme|default("http", true) }}</a>
-              <a href="{{ calendar|webcal_url }}">webcal</a>
-            </td>
-          {% endwith %}
+          <td><a href="{{ url('calendar', slug=calendar.slug) }}">{{ calendar.slug }}</a></td>
+          <td>{{ calendar.name|default("-", true) }}</td>
+          <td>{{ calendar.description|default("-", true) }}</td>
+          <td>{{ calendar.offset_days|sort|join(", ") }}</td>
+          <td>{{ calendar.ttl_hours }} hours</td>
+          {% if config.listing.include_credentials and calendar.auth %}
+            <td><code>{{ calendar.auth.username }}:{{ calendar.auth.password }}</code></td>
+          {% else %}
+            <td>{{ "Yes" if calendar.auth else "No" }}</td>
+          {% endif %}
+          <td><a href="{{ url('calendar-html', slug=calendar.slug) }}">preview</a></td>
+          <td>
+            <a href="{{ calendar|calendar_url }}">{{ (calendar|calendar_url).scheme|default('http', true) }}</a>
+            <a href="{{ (calendar|calendar_url).with_scheme('webcal') }}">webcal</a>
+          </td>
         </tr>
       {% endfor %}
     </table>

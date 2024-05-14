@@ -1,0 +1,8 @@
+#calendar {
+    max-width: 75vw;
+    max-height: 75vh;
+    margin: 0 auto;
+}
+#calendar-message {
+    text-align: center;
+}

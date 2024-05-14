@@ -1,9 +1,13 @@
+from pathlib import Path
+
 import aiohttp_jinja2
 from aiohttp import web
 from jinja2 import FileSystemLoader
 
 from . import templates, views
 from .config import Config
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 
 def get_aiohttp_app(config: Config) -> web.Application:
@@ -18,14 +22,16 @@ def get_aiohttp_app(config: Config) -> web.Application:
         ],
     )
 
-    jinja2_env.filters["webcal_url"] = templates.webcal_url
+    jinja2_env.filters["calendar_url"] = templates.calendar_url
 
     app["config"] = config
 
     app.add_routes(
         [
+            web.static("/static", STATIC_DIR),
             web.get("/.health/", views.healthcheck, name="healthcheck"),
             web.get("/{slug}.ics", views.calendar, name="calendar"),
+            web.get("/{slug}.html", views.calendar_html, name="calendar-html"),
         ]
     )
 
