@@ -9,7 +9,11 @@
   <body>
     <h1>{{ calendar_name }}</h1>
     <p>{{ calendar.description }}</p>
-    <p><a href="{{ calendar|calendar_url }}">{{ calendar|calendar_url }}</a></p>
+    <p>
+      URL:
+      <a href="{{ calendar|calendar_url }}">{{ (calendar|calendar_url).scheme|default('http', true) }}</a>
+      <a href="{{ (calendar|calendar_url).with_scheme('webcal') }}">webcal</a>
+    </p>
 
     <p id="calendar-message">Events are loading...</p>
     <div id='calendar' data-url="{{ calendar|calendar_url }}"></div>
