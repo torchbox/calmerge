@@ -52,9 +52,7 @@ async def calendar_listing(request: web.Request) -> web.Response:
         raise web.HTTPUnauthorized(headers={hdrs.WWW_AUTHENTICATE: "Basic"})
 
     response = aiohttp_jinja2.render_template("listing.html", request, {})
-    response.headers["Content-Security-Policy"] = (
-        "default-src 'self'; style-src 'unsafe-inline'"
-    )
+    response.headers["Content-Security-Policy"] = "default-src 'self'"
     return response
 
 
@@ -66,6 +64,10 @@ async def calendar_html(request: web.Request) -> web.Response:
     if calendar_config is None:
         raise web.HTTPNotFound()
 
-    return aiohttp_jinja2.render_template(
+    response = aiohttp_jinja2.render_template(
         "calendar.html", request, {"calendar": calendar_config}
     )
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; font-src data:"
+    )
+    return response
