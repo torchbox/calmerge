@@ -1,6 +1,8 @@
+import os
 from pathlib import Path
 
 import aiohttp_jinja2
+import aiohttp_remotes
 from aiohttp import web
 from jinja2 import FileSystemLoader
 
@@ -20,6 +22,12 @@ def get_aiohttp_app(config: Config) -> web.Application:
             aiohttp_jinja2.request_processor,
             templates.config_context_processor,
         ],
+    )
+
+    app.middlewares.append(
+        aiohttp_remotes.XForwardedRelaxed(
+            num=int(os.environ.get("X_FORWARDED_NUM", 1))
+        ).middleware
     )
 
     jinja2_env.filters["calendar_url"] = templates.calendar_url

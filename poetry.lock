@@ -127,6 +127,21 @@ aiohttp = ">=3.9.0"
 jinja2 = ">=3.0.0"
 
 [[package]]
+name = "aiohttp-remotes"
+version = "1.2.0"
+description = "Control remote side information."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "aiohttp_remotes-1.2.0-py3-none-any.whl", hash = "sha256:1bc2b11b285b82fab920cc774b8778128d4666e6f6628d6664dfba705ffda062"},
+    {file = "aiohttp_remotes-1.2.0.tar.gz", hash = "sha256:f95c3a6be5e2de746a85ce9af49ec548da6db8378d7e81bb171ec77b13562a6c"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.8.1"
+typing-extensions = ">=3.7.4"
+
+[[package]]
 name = "aiosignal"
 version = "1.3.1"
 description = "aiosignal: a list of registered asynchronous callbacks"
@@ -1000,4 +1015,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "359971f91a76ec8f9a13bf997ca02af8e0995f07c134ca80b1606e3df01e2d65"
+content-hash = "28b6b10d94a08f82c17f6f531ef0d1969a5f66b6a67c19cecd82c3f5a52c209c"
