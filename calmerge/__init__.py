@@ -15,6 +15,12 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 def get_aiohttp_app(config: Config) -> web.Application:
     app = web.Application()
 
+    app.middlewares.append(
+        aiohttp_remotes.XForwardedRelaxed(
+            num=int(os.environ.get("X_FORWARDED_NUM", 1))
+        ).middleware
+    )
+
     jinja2_env = aiohttp_jinja2.setup(
         app,
         loader=FileSystemLoader(templates.TEMPLATES_DIR),
@@ -22,12 +28,6 @@ def get_aiohttp_app(config: Config) -> web.Application:
             aiohttp_jinja2.request_processor,
             templates.config_context_processor,
         ],
-    )
-
-    app.middlewares.append(
-        aiohttp_remotes.XForwardedRelaxed(
-            num=int(os.environ.get("X_FORWARDED_NUM", 1))
-        ).middleware
     )
 
     jinja2_env.filters["calendar_url"] = templates.calendar_url
