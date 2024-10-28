@@ -10,11 +10,12 @@ readme = "README.md"
 python = "^3.11"
 aiohttp = "^3.9.3"
 pydantic = "^2.6.4"
-icalendar = "^5.0.11"
+icalendar = "^6"
 aiocache = "^0.12.2"
 aiohttp-jinja2 = "^1.6"
 
 aiohttp-remotes = "^1.2.0"
+mergecal = "^0.3.6"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.2"
 pytest = "^8.1.1"

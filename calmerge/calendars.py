@@ -6,10 +6,13 @@ from uuid import uuid4
 import icalendar
 from aiocache import Cache
 from aiohttp import ClientSession
+from mergecal import merge_calendars
 
 from .config import CalendarConfig
 
 fetch_cache = Cache(Cache.MEMORY, ttl=3600)
+
+PRODID = "-//Torchbox//Calmerge//EN"
 
 
 async def fetch_calendar(session: ClientSession, url: str) -> icalendar.Calendar:
@@ -25,17 +28,15 @@ async def fetch_calendar(session: ClientSession, url: str) -> icalendar.Calendar
 
 
 async def fetch_merged_calendar(calendar_config: CalendarConfig) -> icalendar.Calendar:
-    merged_calendar = icalendar.Calendar()
+    calendars = []
 
     async with ClientSession() as session:
-        calendars = [fetch_calendar(session, str(url)) for url in calendar_config.urls]
+        for coro in asyncio.as_completed(
+            [fetch_calendar(session, str(url)) for url in calendar_config.urls]
+        ):
+            calendars.append(await coro)
 
-        for coro in asyncio.as_completed(calendars):
-            calendar = await coro
-            for component in calendar.walk("VEVENT"):
-                merged_calendar.add_component(component)
-
-    return merged_calendar
+    return merge_calendars(calendars, prodid=PRODID)
 
 
 def shift_event_by_offset(event: icalendar.cal.Component, offset: timedelta) -> None:

@@ -10,7 +10,7 @@ async def test_retrieves_calendars(client: TestClient) -> None:
     assert response.status == 200
 
     calendar = icalendar.Calendar.from_ical(await response.text())
-    assert not calendar.is_broken
+    assert calendar.errors == []
 
     assert calendar["X-WR-CALNAME"] == "Python"
     assert calendar["X-WR-CALDESC"] == "Python EOL"
@@ -37,7 +37,7 @@ async def test_requires_auth(client: TestClient) -> None:
     assert response.status == 200
 
     calendar = icalendar.Calendar.from_ical(await response.text())
-    assert not calendar.is_broken
+    assert calendar.errors == []
 
 
 async def test_offset(client: TestClient) -> None:
@@ -47,8 +47,8 @@ async def test_offset(client: TestClient) -> None:
     original_response = await client.get("/python.ics")
     original_calendar = icalendar.Calendar.from_ical(await original_response.text())
 
-    assert not offset_calendar.is_broken
-    assert not original_calendar.is_broken
+    assert offset_calendar.errors == []
+    assert original_calendar.errors == []
 
     assert (
         len(offset_calendar.walk("VEVENT")) == len(original_calendar.walk("VEVENT")) * 2

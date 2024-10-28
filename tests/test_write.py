@@ -26,4 +26,4 @@ def test_write_config(tmp_path: Path, config: Config, config_path: Path) -> None
         assert calendar_path.is_file()
 
         calendar = icalendar.Calendar.from_ical(calendar_path.read_text())
-        assert not calendar.is_broken
+        assert calendar.errors == []
