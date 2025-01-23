@@ -25,4 +25,4 @@ def config_path() -> Path:
 def client(
     event_loop: AbstractEventLoop, aiohttp_client: Callable, config: Config
 ) -> TestClient:
-    return event_loop.run_until_complete(aiohttp_client(get_aiohttp_app(config)))  # type: ignore
+    return event_loop.run_until_complete(aiohttp_client(get_aiohttp_app(config)))

@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
-from pydantic_core import Url
 from tomllib import TOMLDecodeError
 
 from calmerge.config import MAX_OFFSET, AuthConfig, CalendarConfig, Config
@@ -59,7 +58,7 @@ def test_urls_expand_env_var(monkeypatch: pytest.MonkeyPatch) -> None:
         urls=["https://example.com/$FOO"],  # type: ignore [list-item]
     )
 
-    assert calendar_config.urls[0] == Url("https://example.com/BAR")
+    assert str(calendar_config.urls[0]) == "https://example.com/BAR"
 
 
 def test_auth_expand_env_var(monkeypatch: pytest.MonkeyPatch) -> None:

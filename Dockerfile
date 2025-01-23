@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 ENV VIRTUAL_ENV=/venv
 
@@ -7,7 +7,7 @@ RUN useradd calmerge --create-home && mkdir /app $VIRTUAL_ENV && chown -R calmer
 WORKDIR /app
 
 # Install poetry at the system level
-RUN pip install --no-cache poetry==1.8.2
+RUN pip install --no-cache poetry==1.8.5
 
 USER calmerge
 
