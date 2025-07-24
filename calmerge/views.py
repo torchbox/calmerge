@@ -67,7 +67,7 @@ async def calendar_html(request: web.Request) -> web.Response:
     if calendar_config.auth and not calendar_config.auth.validate_header(
         request.headers.get("Authorization", "")
     ):
-        raise web.HTTPNotFound()
+        raise web.HTTPUnauthorized(headers={hdrs.WWW_AUTHENTICATE: "Basic"})
 
     response = aiohttp_jinja2.render_template(
         "calendar.html", request, {"calendar": calendar_config}

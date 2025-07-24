@@ -14,7 +14,7 @@ async def test_unknown_calendar(client: TestClient) -> None:
 
 async def test_404_without_auth(client: TestClient) -> None:
     response = await client.get("/python-authed.html")
-    assert response.status == 404
+    assert response.status == 401
 
 
 async def test_requires_auth(client: TestClient) -> None:
