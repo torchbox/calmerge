@@ -1,14 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendarMessage = document.getElementById('calendar-message');
+    const calendarEl = document.getElementById('calendar');
+    const calendarMessage = document.getElementById('calendar-message');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
             start: 'title',
             center: '',
             end: 'today prev,next dayGridMonth,listYear,multiMonthYear'
         },
-        initialView: 'listYear',
+        initialView: 'multiMonthYear',
+        multiMonthMaxColumns: 2,
         events: {
             url: calendarEl.dataset.url,
             format: 'ics',
