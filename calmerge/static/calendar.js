@@ -18,7 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         eventSourceFailure: function() {
             calendarMessage.innerText = "Loading the calendar failed. Please try again later, or check your browser's developer console for more details."
-          }
+        },
+        eventDidMount: function(info) {
+            info.el.title = info.event.title;
+        }
     });
 
     calendar.render();
