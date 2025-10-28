@@ -10,10 +10,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -23,7 +23,7 @@ jobs:
           key: pip-3.13-${{ hashFiles('poetry.lock') }}
 
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@v3
         with:
           poetry-version: 1.8.5
 
@@ -39,10 +39,10 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -52,7 +52,7 @@ jobs:
           key: pip-3.13-${{ hashFiles('poetry.lock') }}
 
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@v3
         with:
           poetry-version: 1.8.5
 
@@ -65,10 +65,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -78,7 +78,7 @@ jobs:
           key: pip-3.13-${{ hashFiles('poetry.lock') }}
 
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@v3
         with:
           poetry-version: 1.8.5
 
@@ -95,10 +95,10 @@ jobs:
       - test
       - typecheck
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         if: ${{ github.ref == 'refs/heads/master' }}
         with:
           registry: ghcr.io
@@ -106,7 +106,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push container
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           push: ${{ github.ref == 'refs/heads/master' }}
           tags: |

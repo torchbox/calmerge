@@ -1,4 +1,3 @@
-from asyncio import AbstractEventLoop
 from pathlib import Path
 from typing import Callable
 
@@ -22,7 +21,5 @@ def config_path() -> Path:
 
 
 @pytest.fixture
-def client(
-    event_loop: AbstractEventLoop, aiohttp_client: Callable, config: Config
-) -> TestClient:
-    return event_loop.run_until_complete(aiohttp_client(get_aiohttp_app(config)))
+async def client(aiohttp_client: Callable, config: Config) -> TestClient:
+    return await aiohttp_client(get_aiohttp_app(config))  # type: ignore[no-any-return]
