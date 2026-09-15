@@ -1,10 +1,10 @@
 import subprocess
 import sys
 from pathlib import Path
+from tomllib import TOMLDecodeError
 
 import pytest
 from pydantic import ValidationError
-from tomllib import TOMLDecodeError
 
 from calmerge.config import MAX_OFFSET, AuthConfig, CalendarConfig, Config
 

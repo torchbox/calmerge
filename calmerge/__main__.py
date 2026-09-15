@@ -1,10 +1,10 @@
 import argparse
 import os
 from pathlib import Path
+from tomllib import TOMLDecodeError
 
 from aiohttp.web import run_app
 from pydantic import ValidationError
-from tomllib import TOMLDecodeError
 
 from . import get_aiohttp_app
 from .config import Config
