@@ -6,23 +6,22 @@ RUN useradd calmerge --create-home && mkdir /app $VIRTUAL_ENV && chown -R calmer
 
 WORKDIR /app
 
-# Install poetry at the system level
-RUN pip install --no-cache poetry==1.8.5
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 USER calmerge
 
-RUN python -m venv $VIRTUAL_ENV
+RUN uv venv $VIRTUAL_ENV
 
 ENV PATH=$VIRTUAL_ENV/bin:$PATH
 
-COPY --chown=calmerge pyproject.toml poetry.lock ./
+COPY --chown=calmerge pyproject.toml uv.lock ./
 
-RUN pip install --no-cache --upgrade pip && poetry install --no-dev --no-root && rm -rf $HOME/.cache
+RUN uv sync --frozen --no-install-local --no-cache
 
 COPY --chown=calmerge . .
 
-# Run poetry install again to install our project
-RUN poetry install --no-dev
+# Run uv install again to install our project
+RUN uv sync --frozen --no-cache
 
 RUN touch /app/calendars.toml
 
