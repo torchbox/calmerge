@@ -1,8 +1,8 @@
+import tomllib
 from os.path import expandvars
 from pathlib import Path
 from secrets import compare_digest
 
-import tomllib
 from aiohttp import BasicAuth
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 from pydantic_core import PydanticCustomError
