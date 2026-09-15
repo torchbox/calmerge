@@ -16,12 +16,12 @@ ENV PATH=$VIRTUAL_ENV/bin:$PATH
 
 COPY --chown=calmerge pyproject.toml uv.lock ./
 
-RUN uv sync --frozen --no-install-local --no-cache
+RUN uv sync --frozen --no-install-local --no-cache --active
 
 COPY --chown=calmerge . .
 
 # Run uv install again to install our project
-RUN uv sync --frozen --no-cache
+RUN uv sync --frozen --no-cache --active
 
 RUN touch /app/calendars.toml
 
