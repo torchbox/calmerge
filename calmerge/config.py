@@ -3,7 +3,7 @@ from os.path import expandvars
 from pathlib import Path
 from secrets import compare_digest
 
-from aiohttp import BasicAuth
+from aiohttp import encode_basic_auth
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 from pydantic_core import PydanticCustomError
 
@@ -19,18 +19,13 @@ class AuthConfig(BaseModel):
     def expand_vars(cls, v: str) -> str:
         return expandvars(v)
 
-    def as_basic_auth(self) -> BasicAuth:
-        return BasicAuth(self.username, self.password)
+    def as_auth_header(self) -> str:
+        return encode_basic_auth(self.username, self.password)
 
     def validate_header(self, auth_header: str) -> bool:
-        try:
-            parsed_auth_header = BasicAuth.decode(auth_header)
-        except ValueError:
+        if not auth_header.lower().startswith("basic"):
             return False
-
-        return compare_digest(
-            self.as_basic_auth().encode(), parsed_auth_header.encode()
-        )
+        return compare_digest(self.as_auth_header().encode(), auth_header.encode())
 
 
 class CalendarConfig(BaseModel):

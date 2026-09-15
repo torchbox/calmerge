@@ -24,7 +24,7 @@ async def fetch_calendar(session: ClientSession, url: str) -> icalendar.Calendar
         cached_calendar_data = await response.text()
         await fetch_cache.set(cache_key, cached_calendar_data)
 
-    return icalendar.Calendar.from_ical(cached_calendar_data)
+    return icalendar.Calendar.from_ical(cached_calendar_data)  # type: ignore[return-value]
 
 
 async def fetch_merged_calendar(calendar_config: CalendarConfig) -> icalendar.Calendar:

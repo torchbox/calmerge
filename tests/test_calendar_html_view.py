@@ -1,4 +1,4 @@
-from aiohttp import BasicAuth
+from aiohttp import encode_basic_auth
 from aiohttp.test_utils import TestClient
 
 
@@ -19,7 +19,8 @@ async def test_404_without_auth(client: TestClient) -> None:
 
 async def test_requires_auth(client: TestClient) -> None:
     response = await client.get(
-        "/python-authed.html", auth=BasicAuth("user", "password")
+        "/python-authed.html",
+        headers={"Authorization": encode_basic_auth("user", "password")},
     )
     assert response.status == 200
 
